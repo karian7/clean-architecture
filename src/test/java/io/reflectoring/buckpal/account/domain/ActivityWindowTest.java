@@ -2,10 +2,12 @@ package io.reflectoring.buckpal.account.domain;
 
 import java.time.LocalDateTime;
 
-import io.reflectoring.buckpal.account.domain.Account.AccountId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static io.reflectoring.buckpal.common.ActivityTestData.*;
+
+import io.reflectoring.buckpal.account.domain.Account.AccountId;
+
+import static io.reflectoring.buckpal.common.ActivityTestData.defaultActivity;
 
 class ActivityWindowTest {
 

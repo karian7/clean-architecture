@@ -8,10 +8,9 @@ import lombok.Value;
 @Value
 public class Money {
 
-	public static Money ZERO = Money.of(0L);
+	public static final Money ZERO = Money.of(0L);
 
-	@NonNull
-	private final BigInteger amount;
+	@NonNull BigInteger amount;
 
 	public boolean isPositiveOrZero(){
 		return this.amount.compareTo(BigInteger.ZERO) >= 0;

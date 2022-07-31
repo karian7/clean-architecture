@@ -1,7 +1,6 @@
 package io.reflectoring.buckpal.account.domain;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class Account {
 	@Getter private final Money baselineBalance;
 
 	/**
-	 * The window of latest activities on this account.
+	 * The window of the latest activities on this account.
 	 */
 	@Getter private final ActivityWindow activityWindow;
 
@@ -51,10 +50,6 @@ public class Account {
 					Money baselineBalance,
 					ActivityWindow activityWindow) {
 		return new Account(accountId, baselineBalance, activityWindow);
-	}
-
-	public Optional<AccountId> getId(){
-		return Optional.ofNullable(this.id);
 	}
 
 	/**
@@ -96,10 +91,9 @@ public class Account {
 
 	/**
 	 * Tries to deposit a certain amount of money to this account.
-	 * If sucessful, creates a new activity with a positive value.
-	 * @return true if the deposit was successful, false if not.
+	 * If successful, creates a new activity with a positive value.
 	 */
-	public boolean deposit(Money money, AccountId sourceAccountId) {
+	public void deposit(Money money, AccountId sourceAccountId) {
 		Activity deposit = new Activity(
 				this.id,
 				sourceAccountId,
@@ -107,12 +101,11 @@ public class Account {
 				LocalDateTime.now(),
 				money);
 		this.activityWindow.addActivity(deposit);
-		return true;
 	}
 
 	@Value
 	public static class AccountId {
-		private Long value;
+		Long value;
 	}
 
 }

@@ -1,17 +1,19 @@
 package io.reflectoring.buckpal.account.application.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import io.reflectoring.buckpal.account.application.port.in.SendMoneyCommand;
 import io.reflectoring.buckpal.account.application.port.in.SendMoneyUseCase;
 import io.reflectoring.buckpal.account.application.port.out.AccountLock;
 import io.reflectoring.buckpal.account.application.port.out.LoadAccountPort;
 import io.reflectoring.buckpal.account.application.port.out.UpdateAccountStatePort;
-import io.reflectoring.buckpal.common.UseCase;
 import io.reflectoring.buckpal.account.domain.Account;
 import io.reflectoring.buckpal.account.domain.Account.AccountId;
+import io.reflectoring.buckpal.common.UseCase;
 import lombok.RequiredArgsConstructor;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @UseCase
@@ -38,9 +40,9 @@ public class SendMoneyService implements SendMoneyUseCase {
 				command.getTargetAccountId(),
 				baselineDate);
 
-		AccountId sourceAccountId = sourceAccount.getId()
+		AccountId sourceAccountId = Optional.ofNullable(sourceAccount.getId())
 				.orElseThrow(() -> new IllegalStateException("expected source account ID not to be empty"));
-		AccountId targetAccountId = targetAccount.getId()
+		AccountId targetAccountId = Optional.ofNullable(targetAccount.getId())
 				.orElseThrow(() -> new IllegalStateException("expected target account ID not to be empty"));
 
 		accountLock.lockAccount(sourceAccountId);
@@ -50,7 +52,9 @@ public class SendMoneyService implements SendMoneyUseCase {
 		}
 
 		accountLock.lockAccount(targetAccountId);
-		if (!targetAccount.deposit(command.getMoney(), sourceAccountId)) {
+		try {
+			targetAccount.deposit(command.getMoney(), sourceAccountId);
+		} catch (Exception e) {
 			accountLock.releaseAccount(sourceAccountId);
 			accountLock.releaseAccount(targetAccountId);
 			return false;

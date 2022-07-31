@@ -1,10 +1,12 @@
 package io.reflectoring.buckpal.account.domain;
 
-import io.reflectoring.buckpal.account.domain.Account.AccountId;
 import org.junit.jupiter.api.Test;
-import static io.reflectoring.buckpal.common.AccountTestData.*;
-import static io.reflectoring.buckpal.common.ActivityTestData.*;
-import static org.assertj.core.api.Assertions.*;
+
+import io.reflectoring.buckpal.account.domain.Account.AccountId;
+
+import static io.reflectoring.buckpal.common.AccountTestData.defaultAccount;
+import static io.reflectoring.buckpal.common.ActivityTestData.defaultActivity;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AccountTest {
 
@@ -87,9 +89,8 @@ class AccountTest {
 								.withMoney(Money.of(1L)).build()))
 				.build();
 
-		boolean success = account.deposit(Money.of(445L), new AccountId(99L));
+		account.deposit(Money.of(445L), new AccountId(99L));
 
-		assertThat(success).isTrue();
 		assertThat(account.getActivityWindow().getActivities()).hasSize(3);
 		assertThat(account.calculateBalance()).isEqualTo(Money.of(2000L));
 	}

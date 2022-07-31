@@ -18,7 +18,7 @@ public class ActivityWindow {
 	/**
 	 * The list of account activities within this window.
 	 */
-	private List<Activity> activities;
+	private final List<Activity> activities;
 
 	/**
 	 * The timestamp of the first activity within this window.
@@ -32,7 +32,6 @@ public class ActivityWindow {
 
 	/**
 	 * The timestamp of the last activity within this window.
-	 * @return
 	 */
 	public LocalDateTime getEndTimestamp() {
 		return activities.stream()
